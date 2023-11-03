@@ -74,38 +74,42 @@ class Program
     {
         Console.Write(prompt);
         string? input = Console.ReadLine();
-        if (input != null && TryParsePoint(input, out Point3D point))
-        {
-            return point;
-        }
-        else
+        if (string.IsNullOrEmpty(input))
         {
             Console.WriteLine("Fehlerhafte Eingabe! Bitte geben Sie 3 Zahlen, die jeweils mit einem Leerzeichen getrennt sind, an!");
+            return GetPointFromUser(prompt);
+        }
+        try
+        {
+            return TryParsePoint(input);
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine(e.Message);
             return GetPointFromUser(prompt);
         }
     }
 
     // Methode zur Überprüfung, ob die Benutzereingabe in einen Punkt umgewandelt werden kann
-    static bool TryParsePoint(string input, out Point3D point)
+    static Point3D TryParsePoint(string input)
     {
-        point = new Point3D(0, 0, 0);
-
         string[] parts = input.Split(' ');
+
         if (parts.Length != 3)
         {
-            return false;
+            throw new FormatException("Fehlerhafte Eingabe! Bitte geben Sie 3 Zahlen, die jeweils mit einem Leerzeichen getrennt sind, an!");
         }
 
         if (double.TryParse(parts[0], out double x) &&
             double.TryParse(parts[1], out double y) &&
             double.TryParse(parts[2], out double z))
         {
-            point = new Point3D(x, y, z);
-            return true;
+            return new Point3D(x, y, z);
         }
 
-        return false;
+        throw new FormatException("Ungültige Eingabe. Stellen Sie sicher, dass die Eingabe aus gültigen Zahlen besteht.");
     }
+
 
     // Methode zur Berechnung der euklidischen Distanz zwischen zwei Punkten
     static double CalculateEuclideanDistance(Point3D point1, Point3D point2)

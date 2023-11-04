@@ -61,10 +61,12 @@ class Program
             case DistanceMethod.Euclidean:
                 double euclideanDistance = CalculateEuclideanDistance(point1, point2);
                 Console.WriteLine($"Die Euklidische Distanz zwischen den angegebenen Punkten beträgt: {euclideanDistance:F2}");
+                Console.ReadKey();
                 break;
             case DistanceMethod.Manhattan:
                 double manhattanDistance = CalculateManhattanDistance(point1, point2);
                 Console.WriteLine($"Die Manhattan Distanz zwischen den angegebenen Punkten beträgt: {manhattanDistance:F2}");
+                Console.ReadKey();
                 break;
         }
     }

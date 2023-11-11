@@ -1,135 +1,108 @@
 using System;
 
-// Definiert eine 3D-Punkt-Klasse mit X, Y und Z als Koordinaten
-class Point3D
-{
-    public double X { get; set; }
-    public double Y { get; set; }
-    public double Z { get; set; }
-
-    // Konstruktor für die Point3D-Klasse
-    public Point3D(double x, double y, double z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
-}
-
-// Enum zur Auswahl der Distanzmethode
-enum DistanceMethod
-{
-    Euclidean,
-    Manhattan
-}
-
 class Program
 {
-    static void Main(string[] args)
+    // Definiert eine 3D-Punkt-Klasse mit X, Y und Z als Koordinaten
+    public class Point3D
     {
-        // Eingabeaufforderung für den Benutzer zur Eingabe der Punkte
-        Point3D point1 = GetPointFromUser("Geben Sie den ersten Punkt an (x y z): ");
-        Point3D point2 = GetPointFromUser("Geben Sie den zweiten Punkt an (x y z): ");
+        public double X { get; }
+        public double Y { get; }
+        public double Z { get; }
 
-        DistanceMethod? choice = null;
-        do
+        // Konstruktor für die Point3D-Klasse
+        public Point3D(double x, double y, double z)
         {
-            // Eingabeaufforderung für den Benutzer zur Auswahl der Distanzmethode
-            Console.WriteLine("Wählen Sie eine Methode aus: ");
-            Console.WriteLine("1 - Euclidean Distanz");
-            Console.WriteLine("2 - Manhattan Distanz");
-            string input = Console.ReadLine() ?? string.Empty;
+            X = x;
+            Y = y;
+            Z = z;
+        }
+    }
 
-            // Auswahl der Distanzmethode basierend auf der Benutzereingabe
-            switch (input)
-            {
-                case "1":
-                    choice = DistanceMethod.Euclidean;
-                    break;
-                case "2":
-                    choice = DistanceMethod.Manhattan;
-                    break;
-                default:
-                    Console.WriteLine("Fehlerhafte Eingabe! Bitte geben Sie \"1\" für Euclidean oder \"2\" für Manhattan ein!");
-                    break;
-            }
-        } while (!choice.HasValue);
+    // Enum zur Auswahl der Distanzmethode
+    public enum DistanceMethod
+    {
+        Euclidean,
+        Manhattan
+    }
 
-        // Berechnung und Ausgabe der Distanz basierend auf der ausgewählten Methode
+    static void Main()
+    {
+        Point3D? point1 = GetPointFromUser("Geben Sie den ersten Punkt an (x y z): ");
+        if (point1 == null) return;
+        Point3D? point2 = GetPointFromUser("Geben Sie den zweiten Punkt an (x y z): ");
+        if (point2 == null) return;
+
+        DistanceMethod? choice = GetDistanceMethod();
+        if (!choice.HasValue) return;
+
+        // Auswahl der Distanzmethode basierend auf der Benutzereingabe
         switch (choice.Value)
         {
             case DistanceMethod.Euclidean:
-                double euclideanDistance = CalculateEuclideanDistance(point1, point2);
+                // Berechnung der Euklidischen Distanz zwischen zwei Punkten
+                double euclideanDistance = Math.Sqrt(Math.Pow(point1.Value.X - point2.Value.X, 2) + Math.Pow(point1.Value.Y - point2.Value.Y, 2) + Math.Pow(point1.Value.Z - point2.Value.Z, 2));
                 Console.WriteLine($"Die Euklidische Distanz zwischen den angegebenen Punkten beträgt: {euclideanDistance:F2}");
-                Console.ReadKey();
                 break;
             case DistanceMethod.Manhattan:
-                double manhattanDistance = CalculateManhattanDistance(point1, point2);
+                // Berechnung der Manhattan Distanz zwischen zwei Punkten
+                double manhattanDistance = Math.Abs(point1.Value.X - point2.Value.X) + Math.Abs(point1.Value.Y - point2.Value.Y) + Math.Abs(point1.Value.Z - point2.Value.Z);
                 Console.WriteLine($"Die Manhattan Distanz zwischen den angegebenen Punkten beträgt: {manhattanDistance:F2}");
-                Console.ReadKey();
                 break;
         }
     }
 
-    // Methode zur Eingabeaufforderung für den Benutzer zur Eingabe eines Punktes
-    static Point3D GetPointFromUser(string prompt)
+    static Point3D? GetPointFromUser(string prompt)
     {
-        Console.Write(prompt);
-        string? input = Console.ReadLine();
-        if (string.IsNullOrEmpty(input))
+        while (true)
         {
-            Console.WriteLine("Fehlerhafte Eingabe! Bitte geben Sie 3 Zahlen, die jeweils mit einem Leerzeichen getrennt sind, an!");
-            return GetPointFromUser(prompt);
-        }
-        try
-        {
-            return TryParsePoint(input);
-        }
-        catch (FormatException e)
-        {
-            Console.WriteLine(e.Message);
-            return GetPointFromUser(prompt);
+            Console.Write(prompt);
+            var input = Console.ReadLine() ?? string.Empty;
+
+            if (ValidateInput(input, out var result))
+            {
+                return result;
+            }
+
+            Console.WriteLine($"Fehlerhafte Eingabe! Bitte geben Sie 3 Zahlen, die jeweils mit einem Leerzeichen getrennt sind, an!{Environment.NewLine}");
         }
     }
 
     // Methode zur Überprüfung, ob die Benutzereingabe in einen Punkt umgewandelt werden kann
-    static Point3D TryParsePoint(string input)
+    static bool ValidateInput(string input, out Point3D result)
     {
-        string[] parts = input.Split(' ');
+        var parts = input.Split(' ');
 
-        if (parts.Length != 3)
+        if (parts.Length != 3 ||
+            !double.TryParse(parts[0], out var x) ||
+            !double.TryParse(parts[1], out var y) ||
+            !double.TryParse(parts[2], out var z))
         {
-            throw new FormatException("Fehlerhafte Eingabe! Bitte geben Sie 3 Zahlen, die jeweils mit einem Leerzeichen getrennt sind, an!");
+            result = default;
+            return false;
         }
 
-        if (double.TryParse(parts[0], out double x) &&
-            double.TryParse(parts[1], out double y) &&
-            double.TryParse(parts[2], out double z))
+        result = new Point3D(x, y, z);
+        return true;
+    }
+
+    static DistanceMethod? GetDistanceMethod()
+    {
+        do
         {
-            return new Point3D(x, y, z);
-        }
+            // Eingabeaufforderung für den Benutzer zur Auswahl der Distanzmethode
+            Console.WriteLine($"Wählen Sie eine Methode aus: {Environment.NewLine}1 - Euclidean Distanz{Environment.NewLine}2 - Manhattan Distanz");
+            var input = Console.ReadLine() ?? string.Empty;
 
-        throw new FormatException("Ungültige Eingabe. Stellen Sie sicher, dass die Eingabe aus gültigen Zahlen besteht.");
-    }
-
-
-    // Methode zur Berechnung der euklidischen Distanz zwischen zwei Punkten
-    static double CalculateEuclideanDistance(Point3D point1, Point3D point2)
-    {
-        double deltaX = point1.X - point2.X;
-        double deltaY = point1.Y - point2.Y;
-        double deltaZ = point1.Z - point2.Z;
-
-        return Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-    }
-
-    // Methode zur Berechnung der Manhattan-Distanz zwischen zwei Punkten
-    static double CalculateManhattanDistance(Point3D point1, Point3D point2)
-    {
-        double deltaX = Math.Abs(point1.X - point2.X);
-        double deltaY = Math.Abs(point1.Y - point2.Y);
-        double deltaZ = Math.Abs(point1.Z - point2.Z);
-
-        return deltaX + deltaY + deltaZ;
+            switch (input)
+            {
+                case "1":
+                    return DistanceMethod.Euclidean;
+                case "2":
+                    return DistanceMethod.Manhattan;
+                default:
+                    Console.WriteLine($"Fehlerhafte Eingabe! Bitte geben Sie \"1\" für Euclidean oder \"2\" für Manhattan ein!{Environment.NewLine}");
+                    break;
+            }
+        } while (true);
     }
 }

@@ -1,4 +1,4 @@
-class Program
+class DistanceCalculator
 {
     // Definiert eine 3D-Punkt-Klasse mit X, Y und Z als Koordinaten
     public class Point3D

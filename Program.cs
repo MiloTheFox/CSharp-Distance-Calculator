@@ -1,5 +1,3 @@
-using System;
-
 class Program
 {
     // Definiert eine 3D-Punkt-Klasse mit X, Y und Z als Koordinaten
@@ -40,12 +38,12 @@ class Program
         {
             case DistanceMethod.Euclidean:
                 // Berechnung der Euklidischen Distanz zwischen zwei Punkten
-                double euclideanDistance = Math.Sqrt(Math.Pow(point1.Value.X - point2.Value.X, 2) + Math.Pow(point1.Value.Y - point2.Value.Y, 2) + Math.Pow(point1.Value.Z - point2.Value.Z, 2));
+                double euclideanDistance = Math.Sqrt(Math.Pow(point1.X - point2.X, 2) + Math.Pow(point1.Y - point2.Y, 2) + Math.Pow(point1.Z - point2.Z, 2));
                 Console.WriteLine($"Die Euklidische Distanz zwischen den angegebenen Punkten beträgt: {euclideanDistance:F2}");
                 break;
             case DistanceMethod.Manhattan:
                 // Berechnung der Manhattan Distanz zwischen zwei Punkten
-                double manhattanDistance = Math.Abs(point1.Value.X - point2.Value.X) + Math.Abs(point1.Value.Y - point2.Value.Y) + Math.Abs(point1.Value.Z - point2.Value.Z);
+                double manhattanDistance = Math.Abs(point1.X - point2.X) + Math.Abs(point1.Y - point2.Y) + Math.Abs(point1.Z - point2.Z);
                 Console.WriteLine($"Die Manhattan Distanz zwischen den angegebenen Punkten beträgt: {manhattanDistance:F2}");
                 break;
         }

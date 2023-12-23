@@ -31,7 +31,7 @@ Alternativ können Sie auch folgendes in die Konsole eingeben:
   ```
   ausgeführt.
 
-3. **Eingabe der Punkte**: Das Programm wird Sie auffordern, die Koordinaten der beiden Punkte einzugeben. Geben Sie die Koordinaten im Format `x y z` ein, wobei `x`, `y` und `z` numerische Werte sind.
+3. **Eingabe der Punkte**: Das Programm wird Sie auffordern, die Koordinaten der drei Punkte einzugeben. Geben Sie die Koordinaten im Format `x y z` ein, wobei `x`, `y` und `z` numerische Werte sind.
 
 4. **Auswahl der Distanzmethode**: Wähle die gewünschte Distanzmethode aus, indem Sie die entsprechende Zahl eingeben:
    - `1` für die Euklidische Distanz

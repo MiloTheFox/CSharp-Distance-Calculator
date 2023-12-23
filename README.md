@@ -1,6 +1,6 @@
 # 3D-Punkt-Distanzrechner
 
-Dieses Programm ist ein einfacher 3D-Punkt-Distanzrechner, der die Euklidische und Manhattan Distanz zwischen zwei im Raum definierten Punkten berechnet.
+Dieses Programm ist ein einfacher 3D-Punkt-Distanzrechner, der die Euklidische und Manhattan Distanz zwischen drei im Raum definierten Punkten berechnet.
 
 ## Ausführung des Programms
 
